@@ -9,6 +9,7 @@ using std::endl;
 #define delimiter "\n----------------------------\n"
 
 class List
+
 {
 	class Element
 	{
@@ -16,18 +17,25 @@ class List
 		Element* pNext;
 		Element* pPrev;
 	public:
+
 		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
 			:Data(Data), pNext(pNext), pPrev(pPrev)
 		{
 			cout << "EConstructor:\t" << this << endl;
 		}
+
 		~Element()
 		{
 			cout << "EDestructor:\t" << this << endl;
 		}
+
 		friend class List;
+
 	}*Head, * Tail;	//Объявляем два указателя на объекты класса 'Element' непосредственно после описания класса;
 	size_t size;	//Количество элементов списка
+
+
+
 	class ConstBaseIterator
 	{
 	protected:
@@ -43,13 +51,14 @@ class List
 		{
 			return this->Temp != other.Temp;
 		}
-
 		int operator*()const
 		{
 			return Temp->Data;
 		}
 	};
+
 public:
+
 	class ConstIterator :public ConstBaseIterator
 	{
 	public:
@@ -93,6 +102,7 @@ public:
 	class ConstReverseIterator:public ConstBaseIterator
 	{
 	public:
+
 		ConstReverseIterator(Element* Temp) :ConstBaseIterator(Temp)
 		{
 #ifdef DEBUG
@@ -141,6 +151,7 @@ public:
 			return Temp->Data;
 		}
 	};
+
 	class ReverseIterator :public ConstReverseIterator
 	{
 	public:
