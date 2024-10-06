@@ -10,9 +10,7 @@ using std::endl;
 
 template <class T>
 class List
-
 {
-	//template <class T>
 	class Element
 	{
 		T Data;
@@ -25,18 +23,13 @@ class List
 		{
 			cout << "EConstructor:\t" << this << endl;
 		}
-
 		~Element()
 		{
 			cout << "EDestructor:\t" << this << endl;
 		}
-
 		friend class List;
-
-	} *Head, * Tail;	//Объявляем два указателя на объекты класса 'Element' непосредственно после описания класса;
-	//Element<T>* Head;
-	//Element<T>* Tail;
-	size_t size;	//Количество элементов списка
+	} *Head, * Tail;
+	size_t size;
 
 	// Curiosly Recurring Template Pattern 
 	//https://en.cppreference.com/w/cpp/language/crtp
@@ -45,6 +38,7 @@ class List
 	{
 	protected:
 		Element* Temp;
+
 	public:
 		ConstBaseIterator(Element* Temp) :Temp(Temp) {}
 		 ~ConstBaseIterator() {}
@@ -83,10 +77,8 @@ class List
 			return old;
 		}
 	};
-
 public:
 
-	//template <class DConstIterator>
 	class ConstIterator :public ConstBaseIterator<ConstIterator>
 	{
 	public:
@@ -104,7 +96,6 @@ public:
 		}
 	};
 
-	//template <class T>
 	class ConstReverseIterator:public ConstBaseIterator<ConstReverseIterator>
 	{
 	public:
@@ -122,7 +113,6 @@ public:
 		}
 	};
 
-	//template <class T>
 	class Iterator : public ConstIterator
 	{
 	public:
@@ -135,10 +125,10 @@ public:
 		}
 	};
 
-	//template <class T>
 	class ReverseIterator : public ConstReverseIterator
 	{
 	public:
+
 		ReverseIterator(Element* Temp) :ConstReverseIterator(Temp) {}
 		~ReverseIterator() {}
 
@@ -181,14 +171,10 @@ public:
 		return nullptr;
 	}
 
-	List()
+	List():Head(nullptr),Tail(nullptr),size(0)
 	{
-		//Конструктор по умолчанию создает пустой список
-		Head = Tail = nullptr;
-		size = 0;
 		cout << "LConstrutor:\t" << this << endl;
 	}
-	//template <class T>
 	List(const std::initializer_list<T>& il) :List()
 	{
 		// begin()- возвращает итератор на начало контейнера.
@@ -196,37 +182,26 @@ public:
 		// Итератор - это указатель, при помощи которого можно получить доступ к элементам структуры
 		cout << typeid(il.begin()).name() << endl;
 		for (const T* it = il.begin(); it != il.end(); it++)
-			push_back(*it);
+		push_back(*it);
 	}
-	//template <class T>
+
 	List(const List& other):List() // Без делегирования может падать 
 	{
 		*this = other;
 		cout << "LCopyConstructor:\t" << this << endl;
 	}
-	//template <class T>
+
 	List(List&& other) :List()
 	{
 		*this = std::move(other); // явный вызов MoveAssignment
 	}
 	~List()
 	{
-		/*
-		----------------------------
-		while (Condition)
-		{
-			group - of - statements;
-		}
-		----------------------------
-		while (Condition)expression;
-		----------------------------
-		*/
-		//while (Head)pop_front();
 		while (Tail)pop_back();
 		cout << "LDestrutor:\t" << this << endl;
 	}
+
 	//       operators:
-	//template <class T>
 	List& operator=(const List& other)
 	{
 		if (this == &other)return *this;
@@ -238,7 +213,7 @@ public:
 		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
-	//template <class T>
+
 	List& operator=(List&& other)
 	{
 		if (this == &other)return *this;
@@ -256,36 +231,25 @@ public:
 		cout << "LMoveAssignment:\t" << this << endl;
 	}
 	//					Adding elements:
-	//template <class T>
+
 	void push_front(T Data)
 	{
 		if (Head == nullptr && Tail == nullptr)
 			Head = Tail = new Element(Data);
 		else
 		{
-			////1) Создаем новый элемент:
-			//Element* New = new Element(Data);
-
-			////2) Присоединяем элемент к списку:
-			//New->pNext = Head;
-
-			////3) Присоединяем список к элементу:
-			//Head->pPrev = New;
-
-			////4) Смещаем Голову на новый элемент:
-			//Head = New;
 			Head = Head->pPrev = new Element(Data, Head);
 		}
 		size++;
 	}
-	//template <class T>
+
 	void push_back(T Data)
 	{
 		if (Head == nullptr && Tail == nullptr) return push_front(Data);
 		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 	}
-	//template <class T>
+
 	void insert(T Data, int Index)
 	{
 		if (Index == 0)return push_front(Data);
