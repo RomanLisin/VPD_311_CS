@@ -66,7 +66,6 @@ public:
 	class ConstIterator :public ConstBaseIterator	
 	{
 	public:
-		//using ConstBaseIterator<T>::ConstBaseIterator; //наследуем конструктор базового класса, если включить, то можно обойтись без явной реализации конструктора
 		ConstIterator(Element* Temp):ConstBaseIterator(Temp)
 		{
 #ifdef DEBUG
@@ -108,7 +107,6 @@ public:
 	class ConstReverseIterator:public ConstBaseIterator
 	{
 	public:
-		//using ConstBaseIterator<T>::ConstBaseIterator;    //                                           наследуем конструктор базового класса
 		ConstReverseIterator(Element* Temp) :ConstBaseIterator(Temp)
 		{
 #ifdef DEBUG
@@ -172,43 +170,34 @@ public:
 		}
 	};
 
-
-	//template <class T>
 	ConstIterator begin() const
 	{
 		return Head;
 	}
-	//template <class T>
 	 ConstIterator end() const
 	{
 		return nullptr;
 	}
-	//template <class T>
 	Iterator begin() 
 	{
 		return Head;
 	}
-	//template <class T>
 	Iterator end() 
 	{
 		return nullptr;
 	}
-	//template <class T>
 	ConstReverseIterator rbegin() const
 	{
 		return Tail;
 	}
-	//template <class T>
 	ConstReverseIterator rend() const
 	{
 		return nullptr;
 	}
-	//template <class T>
 	ReverseIterator rbegin()
 	{
 		return Tail;
 	}
-	//template <class T>
 	ReverseIterator rend()
 	{
 		return nullptr;
@@ -241,9 +230,7 @@ public:
 	List(List&& other) :List()
 	{
 		*this = std::move(other); // явный вызов MoveAssignment
-
 	}
-	//template <class T>
 	~List()
 	{
 		/*
@@ -260,7 +247,6 @@ public:
 		while (Tail)pop_back();
 		cout << "LDestrutor:\t" << this << endl;
 	}
-
 	//       operators:
 	//template <class T>
 	List& operator=(const List& other)
@@ -274,7 +260,6 @@ public:
 		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
-
 	//template <class T>
 	List& operator=(List&& other)
 	{
@@ -292,7 +277,6 @@ public:
 
 		cout << "LMoveAssignment:\t" << this << endl;
 	}
-
 	//					Adding elements:
 	//template <class T>
 	void push_front(T Data)
@@ -345,8 +329,6 @@ public:
 		size++;
 	}
 	//             Removing elements:
-
-	//template <class T>
 	void pop_front()
 	{
 		if (Head == Tail)
@@ -361,8 +343,6 @@ public:
 		Head->pPrev = nullptr;
 		size--;
 	}
-
-	//template <class T>
 	void pop_back()
 	{
 		if (Head == Tail) return pop_front();
@@ -372,7 +352,6 @@ public:
 		size--;
 	}
 	//						Methods:
-	//template <class T>
 	void print()const
 	{
 		cout << "Head:\t" << Head << endl;
@@ -381,7 +360,6 @@ public:
 		cout << "Tail:\t" << Tail << endl;
 		cout << "Количество элементов списка: " << size << endl;
 	}
-	//template <class T>
 	void reverse_print()const
 	{
 		cout << "Tail:\t" << Tail << endl;
@@ -404,14 +382,12 @@ List<T> operator+(const List<T>& left, const List<T>& right)
 	}
 	return buffer;
 }
-
 //#define BASE_CHECK
 //#define ITERATORS_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
-
 #ifdef BASE_CHECK
 	T n;
 	cout << "Введите размер списка: "; cin >> n;
@@ -426,7 +402,6 @@ void main()
 	/*for (int i = 0; i < n*2; i++)list.pop_back();
 	list.print();
 	list.reverse_print();*/
-
 	int index;
 	T value;
 	cout << "Введите индекс добавляемого элемента: "; cin >> index;
@@ -466,7 +441,7 @@ void main()
 #endif // ITERATORS_CHECK
 
 		List<std::string> list1 = { "3", "5", "8", "13", "21" };
-		List<std::string> list2 = { " 34"," 55", "89" };
+	List<std::string> list2 = { " 34"," 55", "89" };
 		List<std::string> list3 = list1+list2;
 		for(std::string i:list1) cout << i << tab; cout << endl;
 		for(std::string i:list2) cout << i << tab; cout << endl;
