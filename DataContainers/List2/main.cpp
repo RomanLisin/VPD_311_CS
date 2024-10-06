@@ -465,16 +465,16 @@ void main()
 	cout << endl;
 #endif // ITERATORS_CHECK
 
-		List<int> list1 = { 3, 5, 8, 13, 21 };
-		List<int> list2 = { 34, 55, 89 };
-		List<int> list3 = list1+list2;
-		for(int i:list1) cout << i << tab; cout << endl;
-		for(int i:list2) cout << i << tab; cout << endl;
-		for(int i:list3) cout << i << tab; cout << endl;
+		List<std::string> list1 = { "3", "5", "8", "13", "21" };
+		List<std::string> list2 = { " 34"," 55", "89" };
+		List<std::string> list3 = list1+list2;
+		for(std::string i:list1) cout << i << tab; cout << endl;
+		for(std::string i:list2) cout << i << tab; cout << endl;
+		for(std::string i:list3) cout << i << tab; cout << endl;
 
-		for (List<int>::Iterator it = list1.begin(); it != list1.end(); ++it)
+		for (List<std::string>::Iterator it = list1.begin(); it != list1.end(); ++it)
 		{
-			*it *= 10;
+			*it += "0";
 		}
-		for(int i:list1) cout << i << tab; cout << endl;
+		for(std::string i:list1) cout << i << tab; cout << endl;
 }
