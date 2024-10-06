@@ -38,39 +38,59 @@ class List
 	//Element<T>* Tail;
 	size_t size;	//Количество элементов списка
 
-	template <class T>
+	// Curiosly Recurring Template Pattern 
+	https://en.cppreference.com/w/cpp/language/crtp
+	template <class D>
 	class ConstBaseIterator
 	{
 	protected:
 		Element* Temp;
 	public:
 		ConstBaseIterator(Element* Temp) :Temp(Temp) {}
-		 virtual ~ConstBaseIterator() {}
-		 virtual bool operator==(const ConstBaseIterator& other)const
+		 ~ConstBaseIterator() {}
+		bool operator==(const ConstBaseIterator& other)const
 		{
 			return this->Temp == other.Temp;
 		}
-		 virtual bool operator!=(const ConstBaseIterator& other)const
+		bool operator!=(const ConstBaseIterator& other)const
 		{
 			return this->Temp != other.Temp;
 		}
-		virtual T operator*()const
+		T operator*()const
 		{
 			return this->Temp->Data;
 		}
-		virtual ConstBaseIterator& operator++() = 0;
-		virtual ConstBaseIterator& operator--() = 0;
-		/*virtual ConstBaseIterator& operator++(int) = 0;
-		virtual ConstBaseIterator& operatro--(int) = 0;*/
+		D& operator++()
+		{
+			Temp = Temp->pNext;
+			return static_cast<D&>(*this);
+		}
+		D operator++(int)
+		{
+			D old = static_cast<D&>(*this);
+			Temp = Temp->pNext;
+			return old;
+		}
+		D& operator--()
+		{
+			Temp = Temp->pPrev;
+			return static_cast<D&>(*this);
+		}
+		D operator--(int)
+		{
+			D old = static_cast<D&>(*this);
+			Temp = Temp->pPrev;
+			return old;
+		}
 	};
 
 public:
 
-	//template <class T>
-	class ConstIterator :public ConstBaseIterator<T>
+	//template <class DConstIterator>
+	class ConstIterator :public ConstBaseIterator<ConstIterator>
 	{
 	public:
-		ConstIterator(Element* Temp):ConstBaseIterator<T>(Temp)
+		ConstIterator(Element* Temp):ConstBaseIterator<ConstIterator>(Temp)
 		{
 #ifdef DEBUG
 			cout << "ITConstructor:\t" << this << endl;
@@ -82,36 +102,13 @@ public:
 			cout << "ITDestructor:\t" << this << endl;
 #endif // DEBUG
 		}
-		ConstIterator& operator++() override       // Prefix increment	
-		{
-			this->Temp = this->Temp->pNext;
-			return *this;
-		}
-
-		ConstIterator operator++(int) //override        // Postfix increment
-		{
-			ConstIterator old = *this;
-			this->Temp = this->Temp->pNext;
-			return old;
-		}
-		ConstIterator& operator--() override
-		{
-			this->Temp = this->Temp->pPrev;
-			return *this;;
-		}
-		ConstIterator operator--(int) //override
-		{
-			ConstIterator old = *this;
-			this->Temp = this->Temp->pPrev;
-			return old;
-		}
 	};
 
 	//template <class T>
-	class ConstReverseIterator:public ConstBaseIterator<T>
+	class ConstReverseIterator:public ConstBaseIterator<ConstReverseIterator>
 	{
 	public:
-		ConstReverseIterator(Element* Temp) :ConstBaseIterator<T>(Temp)
+		ConstReverseIterator(Element* Temp) :ConstBaseIterator<ConstReverseIterator>(Temp)
 		{
 #ifdef DEBUG
 			cout << "RITConstructor:\t" << this << endl;
@@ -122,29 +119,6 @@ public:
 #ifdef DEBUG
 			cout << "RITDestructor:\t" << this << endl;
 #endif // DEBUG
-		}
-
-		ConstReverseIterator& operator++() override
-		{
-			this->Temp = this->Temp->pPrev;
-			return *this;
-		}
-		ConstReverseIterator operator++(int) //override		
-		{
-			ConstReverseIterator old = *this;
-			this->Temp = this->Temp->pPrev;
-			return old;
-		}
-		ConstReverseIterator& operator--() override
-		{
-			this->Temp = this->Temp->pNext;
-			return *this;
-		}
-		ConstReverseIterator operator--(int) //override
-		{
-			ConstReverseIterator old = *this;
-			this->Temp = this->Temp->pNext;
-			return old;
 		}
 	};
 
@@ -445,7 +419,7 @@ void main()
 #endif // ITERATORS_CHECK
 
 		List<std::string> list1 = { "3", "5", "8", "13", "21" };
-	List<std::string> list2 = { " 34"," 55", "89" };
+		List<std::string> list2 = { " 34"," 55", "89" };
 		List<std::string> list3 = list1+list2;
 		for(std::string i:list1) cout << i << tab; cout << endl;
 		for(std::string i:list2) cout << i << tab; cout << endl;
