@@ -8,17 +8,19 @@ using std::endl;
 #define tab "\t"
 #define delimiter "\n----------------------------\n"
 
+template <class T>
 class List
 
 {
+	//template <class T>
 	class Element
 	{
-		int Data;
+		T Data;
 		Element* pNext;
 		Element* pPrev;
 	public:
 
-		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
+		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr)
 			:Data(Data), pNext(pNext), pPrev(pPrev)
 		{
 			cout << "EConstructor:\t" << this << endl;
@@ -31,19 +33,20 @@ class List
 
 		friend class List;
 
-	}*Head, * Tail;	//Объявляем два указателя на объекты класса 'Element' непосредственно после описания класса;
+	} *Head, * Tail;	//Объявляем два указателя на объекты класса 'Element' непосредственно после описания класса;
+	//Element<T>* Head;
+	//Element<T>* Tail;
 	size_t size;	//Количество элементов списка
 
-
-
+	//template <class T>
 	class ConstBaseIterator
 	{
 	protected:
 		Element* Temp;
 	public:
 		ConstBaseIterator(Element* Temp) :Temp(Temp) {}
-		~ConstBaseIterator() {}
-		bool operator==(const ConstBaseIterator& other)const
+		 ~ConstBaseIterator() {}
+		 bool operator==(const ConstBaseIterator& other)const
 		{
 			return this->Temp == other.Temp;
 		}
@@ -51,18 +54,20 @@ class List
 		{
 			return this->Temp != other.Temp;
 		}
-		int operator*()const
+		T operator*()const
 		{
-			return Temp->Data;
+			return this->Temp->Data;
 		}
 	};
 
 public:
 
-	class ConstIterator :public ConstBaseIterator
+	//template <class T>
+	class ConstIterator :public ConstBaseIterator	
 	{
 	public:
-		ConstIterator(Element* Temp) :ConstBaseIterator(Temp)
+		//using ConstBaseIterator<T>::ConstBaseIterator; //наследуем конструктор базового класса, если включить, то можно обойтись без явной реализации конструктора
+		ConstIterator(Element* Temp):ConstBaseIterator(Temp)
 		{
 #ifdef DEBUG
 			cout << "ITConstructor:\t" << this << endl;
@@ -74,35 +79,36 @@ public:
 			cout << "ITDestructor:\t" << this << endl;
 #endif // DEBUG
 		}
-		ConstIterator& operator++()            // Prefix increment
+		ConstIterator& operator++()        // Prefix increment	
 		{
-			Temp = Temp->pNext;
+			this->Temp = this->Temp->pNext;
 			return *this;
 		}
 
-		ConstIterator operator++(int)           // Postfix increment
+		ConstIterator operator++(int)         // Postfix increment
 		{
 			ConstIterator old = *this;
-			Temp = Temp->pNext;
+			this->Temp = this->Temp->pNext;
 			return old;
 		}
-		ConstIterator operator--()
+		ConstIterator operator--() 
 		{
-			Temp = Temp->pPrev;
+			this->Temp = this->Temp->pPrev;
 			return *this;;
 		}
-		ConstIterator operator--(int)
+		ConstIterator operator--(int) 
 		{
-			ConstIterator old = Temp;
-			Temp = Temp->pPrev;
+			ConstIterator old = *this;
+			this->Temp = this->Temp->pPrev;
 			return old;
 		}
 	};
 
+	//template <class T>
 	class ConstReverseIterator:public ConstBaseIterator
 	{
 	public:
-
+		//using ConstBaseIterator<T>::ConstBaseIterator;    //                                           наследуем конструктор базового класса
 		ConstReverseIterator(Element* Temp) :ConstBaseIterator(Temp)
 		{
 #ifdef DEBUG
@@ -118,80 +124,91 @@ public:
 
 		ConstReverseIterator& operator++()
 		{
-			Temp = Temp->pPrev;
+			this->Temp = this->Temp->pPrev;
 			return *this;
 		}
 		ConstReverseIterator operator++(int)
 		{
 			ConstReverseIterator old = *this;
-			Temp = Temp->pPrev;
+			this->Temp = this->Temp->pPrev;
 			return old;
 		}
 		ConstReverseIterator operator--()
 		{
-			Temp = Temp->pNext;
+			this->Temp = this->Temp->pNext;
 			return *this;
 		}
 		ConstReverseIterator operator--(int)
 		{
 			ConstReverseIterator old = *this;
-			Temp = Temp->pNext;
+			this->Temp = this->Temp->pNext;
 			return old;
 		}
 	};
 
+	//template <class T>
 	class Iterator : public ConstIterator
 	{
 	public:
 
 		Iterator(Element* Temp) :ConstIterator(Temp) {}
 		~Iterator() {}
-		int& operator*()
+		T& operator*()
 		{
-			return Temp->Data;
+			return this->Temp->Data;
 		}
 	};
 
-	class ReverseIterator :public ConstReverseIterator
+	//template <class T>
+	class ReverseIterator : public ConstReverseIterator
 	{
 	public:
 		ReverseIterator(Element* Temp) :ConstReverseIterator(Temp) {}
 		~ReverseIterator() {}
 
-		int& operator*()
+		T& operator*()
 		{
-			return Temp->Data;
+			return this->Temp->Data;
 		}
 	};
 
+
+	//template <class T>
 	ConstIterator begin() const
 	{
 		return Head;
 	}
+	//template <class T>
 	 ConstIterator end() const
 	{
 		return nullptr;
 	}
-	 Iterator begin() 
+	//template <class T>
+	Iterator begin() 
 	{
 		return Head;
 	}
-	 Iterator end() 
+	//template <class T>
+	Iterator end() 
 	{
 		return nullptr;
 	}
+	//template <class T>
 	ConstReverseIterator rbegin() const
 	{
 		return Tail;
 	}
+	//template <class T>
 	ConstReverseIterator rend() const
 	{
 		return nullptr;
 	}
+	//template <class T>
 	ReverseIterator rbegin()
 	{
 		return Tail;
 	}
+	//template <class T>
 	ReverseIterator rend()
 	{
 		return nullptr;
@@ -204,25 +221,29 @@ public:
 		size = 0;
 		cout << "LConstrutor:\t" << this << endl;
 	}
-	List(const std::initializer_list<int>& il) :List()
+	//template <class T>
+	List(const std::initializer_list<T>& il) :List()
 	{
 		// begin()- возвращает итератор на начало контейнера.
 		// end() - возвращает итератор на конец коентейнера.
 		// Итератор - это указатель, при помощи которого можно получить доступ к элементам структуры
 		cout << typeid(il.begin()).name() << endl;
-		for (int const* it = il.begin(); it != il.end(); it++)
+		for (const T* it = il.begin(); it != il.end(); it++)
 			push_back(*it);
 	}
+	//template <class T>
 	List(const List& other):List() // Без делегирования может падать 
 	{
 		*this = other;
 		cout << "LCopyConstructor:\t" << this << endl;
 	}
+	//template <class T>
 	List(List&& other) :List()
 	{
 		*this = std::move(other); // явный вызов MoveAssignment
 
 	}
+	//template <class T>
 	~List()
 	{
 		/*
@@ -241,6 +262,7 @@ public:
 	}
 
 	//       operators:
+	//template <class T>
 	List& operator=(const List& other)
 	{
 		if (this == &other)return *this;
@@ -252,6 +274,8 @@ public:
 		cout << "LCopyAssignment:\t" << this << endl;
 		return *this;
 	}
+
+	//template <class T>
 	List& operator=(List&& other)
 	{
 		if (this == &other)return *this;
@@ -270,7 +294,8 @@ public:
 	}
 
 	//					Adding elements:
-	void push_front(int Data)
+	//template <class T>
+	void push_front(T Data)
 	{
 		if (Head == nullptr && Tail == nullptr)
 			Head = Tail = new Element(Data);
@@ -291,13 +316,15 @@ public:
 		}
 		size++;
 	}
-	void push_back(int Data)
+	//template <class T>
+	void push_back(T Data)
 	{
 		if (Head == nullptr && Tail == nullptr) return push_front(Data);
 		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 		size++;
 	}
-	void insert(int Data, int Index)
+	//template <class T>
+	void insert(T Data, int Index)
 	{
 		if (Index == 0)return push_front(Data);
 			if (Index == size-1)return push_back(Data);
@@ -319,6 +346,7 @@ public:
 	}
 	//             Removing elements:
 
+	//template <class T>
 	void pop_front()
 	{
 		if (Head == Tail)
@@ -333,6 +361,8 @@ public:
 		Head->pPrev = nullptr;
 		size--;
 	}
+
+	//template <class T>
 	void pop_back()
 	{
 		if (Head == Tail) return pop_front();
@@ -342,6 +372,7 @@ public:
 		size--;
 	}
 	//						Methods:
+	//template <class T>
 	void print()const
 	{
 		cout << "Head:\t" << Head << endl;
@@ -350,6 +381,7 @@ public:
 		cout << "Tail:\t" << Tail << endl;
 		cout << "Количество элементов списка: " << size << endl;
 	}
+	//template <class T>
 	void reverse_print()const
 	{
 		cout << "Tail:\t" << Tail << endl;
@@ -359,11 +391,13 @@ public:
 		cout << "Количество элементов списка: " << size << endl;
 	}
 };
-List operator+(const List& left, const List& right)
+
+template <class T>
+List<T> operator+(const List<T>& left, const List<T>& right)
 {
-	List buffer;
-	for (List::ConstIterator it = left.begin(); it != left.end(); ++it)buffer.push_back(*it);
-	for (List::ConstIterator it = right.begin(); it != right.end(); ++it)
+	List<T> buffer;
+	for (class List<T>::ConstIterator it = left.begin(); it != left.end(); ++it)buffer.push_back(*it); // без 'class' компилятор может интерпретировать List<T>
+	for (class List<T>::ConstIterator it = right.begin(); it != right.end(); ++it) // ::ConstIterator как статический член данных или статическую функцию, а не как тип
 	{
 		buffer.push_back(*it);
 		//*it *= 10;
@@ -379,7 +413,7 @@ void main()
 	setlocale(LC_ALL, "");
 
 #ifdef BASE_CHECK
-	int n;
+	T n;
 	cout << "Введите размер списка: "; cin >> n;
 	List list;
 	for (int i = 0; i < n; i++)
@@ -394,7 +428,7 @@ void main()
 	list.reverse_print();*/
 
 	int index;
-	int value;
+	T value;
 	cout << "Введите индекс добавляемого элемента: "; cin >> index;
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
 	try
@@ -431,14 +465,14 @@ void main()
 	cout << endl;
 #endif // ITERATORS_CHECK
 
-		List list1 = { 3, 5, 8, 13, 21 };
-		List list2 = { 34, 55, 89 };
-		List list3 = list1+list2;
+		List<int> list1 = { 3, 5, 8, 13, 21 };
+		List<int> list2 = { 34, 55, 89 };
+		List<int> list3 = list1+list2;
 		for(int i:list1) cout << i << tab; cout << endl;
 		for(int i:list2) cout << i << tab; cout << endl;
 		for(int i:list3) cout << i << tab; cout << endl;
 
-		for (List::Iterator it = list1.begin(); it != list1.end(); ++it)
+		for (List<int>::Iterator it = list1.begin(); it != list1.end(); ++it)
 		{
 			*it *= 10;
 		}
