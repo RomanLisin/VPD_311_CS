@@ -39,7 +39,7 @@ class List
 	size_t size;	//Количество элементов списка
 
 	// Curiosly Recurring Template Pattern 
-	https://en.cppreference.com/w/cpp/language/crtp
+	//https://en.cppreference.com/w/cpp/language/crtp
 	template <class D>
 	class ConstBaseIterator
 	{
